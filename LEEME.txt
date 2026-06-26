@@ -1,0 +1,55 @@
+========================================
+   WALLACE POS — Plataforma multiempresa
+========================================
+
+CÓMO ABRIRLO (LO MÁS FÁCIL — sin programas, sin terminal)
+----------------------------------------------------------
+1. Descomprime esta carpeta donde quieras.
+2. Haz doble clic en  index.html
+3. ¡Listo! Se abre en tu navegador y funciona.
+
+NO necesitas Node, ni VS Code, ni npm, ni comandos.
+
+
+USUARIOS DE PRUEBA (usuario / contraseña)
+------------------------------------------
+   wallace / wallace123   →  TÚ (Super Admin / Portal Wallace)
+   ana     / ana123        →  Administradora (Restaurante La Sazón, Premium)
+   luis    / luis123       →  Cajero
+   sara    / sara123       →  Mesera
+   pedro   / pedro123      →  Administrador (Café del Parque, Pro)
+
+Puedes cambiar tu contraseña dentro del sistema:
+ - Admin de empresa: Configuración > Cambiar mi contraseña
+ - Super Admin: Mi cuenta > Cambiar mi contraseña
+
+
+QUÉ PUEDES HACER
+----------------
+COMO SUPER ADMIN (wallace):
+ - Empresas > Nueva empresa: crea un cliente nuevo + su administrador.
+ - Usuarios: gestiona empleados de todas las empresas.
+ - Planes, Resumen global, Mi cuenta.
+
+COMO ADMIN DE EMPRESA (ana):
+ - POS con mesas, para llevar, dividir, mover, comanda, cobrar.
+ - Caja: abrir, movimientos, cerrar (imprime corte).
+ - Inventario: productos, precios, stock, menú.
+ - Configuración > Logo del negocio (sale en la factura).
+ - Configuración > Empleados (crea cajeros, meseros).
+ - Domicilios, Clientes, Reportes, Asistente IA.
+
+
+CÓMO ACTUALIZAR
+---------------
+Cuando te entregue mejoras, normalmente cambia solo el archivo  app.js
+(a veces también index.html). Reemplazas ese archivo en tu carpeta
+y refrescas el navegador (F5). Tus datos NO se pierden: se guardan
+en el navegador.
+
+
+PUBLICAR EN INTERNET (cuando quieras)
+-------------------------------------
+Los archivos render.yaml y package.json ya están listos para subir a
+Render.com como sitio estático, igual que hiciste con Portal Imperial.
+Cuando quieras, te guío paso a paso.
