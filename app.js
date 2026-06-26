@@ -3,15 +3,50 @@
    HTML + JS puro. Sin compilar. Guardado local (luego Firebase).
    =================================================================== */
 
-/* ---------- CAPA DE DATOS ---------- */
+/* ---------- CAPA DE DATOS (local + Firebase en la nube) ---------- */
 const CACHE = {};
+let FB_READY = false, fbDB = null;
+
 const DB = {
   get(k){ if(k in CACHE) return CACHE[k];
     try{ const v=localStorage.getItem('w_'+k); CACHE[k]=v?JSON.parse(v):null; }catch(e){ CACHE[k]=null; }
     return CACHE[k];
   },
-  set(k,v){ CACHE[k]=v; try{ localStorage.setItem('w_'+k, JSON.stringify(v)); }catch(e){} },
+  set(k,v){ CACHE[k]=v;
+    try{ localStorage.setItem('w_'+k, JSON.stringify(v)); }catch(e){}
+    if(FB_READY && fbDB){ try{ fbDB.ref('data/'+k).set(v===undefined?null:v); }catch(e){ console.warn('FB set',e); } }
+  },
 };
+
+/* ---------- Conexión a Firebase (si hay llaves configuradas) ---------- */
+function initFirebase(){
+  const cfg = window.FIREBASE_CONFIG;
+  if(!cfg || !cfg.apiKey || cfg.apiKey.indexOf('PEGA_AQUI')===0){
+    console.log('Wallace: modo local (sin Firebase). Pega tus llaves en firebase-config.js para activar la nube.');
+    return false;
+  }
+  if(typeof firebase === 'undefined'){ console.warn('Firebase no cargó'); return false; }
+  try{
+    firebase.initializeApp(cfg);
+    fbDB = firebase.database();
+    FB_READY = true;
+    // Escuchar cambios en la nube y refrescar la pantalla en tiempo real
+    fbDB.ref('data').on('value', (snap)=>{
+      const data = snap.val();
+      if(data){
+        Object.keys(data).forEach(k=>{ CACHE[k]=data[k]; try{ localStorage.setItem('w_'+k, JSON.stringify(data[k])); }catch(e){} });
+        // si ya hay sesión abierta, refrescar la vista actual
+        if(STATE.user){ try{ STATE.user.rol==='superadmin'?renderPortal():renderShell(); }catch(e){} }
+      } else {
+        // primera vez: subir los datos locales (semilla) a la nube
+        ['empresas','usuarios','categorias','productos','mesas','clientes','ventas','caja','domicilios','init']
+          .forEach(k=>{ if(DB.get(k)!=null) fbDB.ref('data/'+k).set(DB.get(k)); });
+      }
+    });
+    console.log('Wallace: conectado a Firebase (nube activa).');
+    return true;
+  }catch(e){ console.warn('Error Firebase:',e); return false; }
+}
 
 /* ---------- HELPERS ---------- */
 const $ = (id) => document.getElementById(id);
@@ -924,3 +959,4 @@ function abrirTicket(job){
 
 /* ---------- ARRANQUE ---------- */
 initData();
+initFirebase();
